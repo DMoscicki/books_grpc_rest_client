@@ -1,0 +1,36 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+    environment:
+      - host=db_mysql
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    depends_on:
+      - server
+    ports:
+      - 8081:8081
+    environment:
+      - grpc_server=server
+  database:
+    container_name: db_mysql
+    ports:
+      - 3306:3306
+    image: mysql:latest
+    volumes:
+      - ./db/backup.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+        MYSQL_ROOT_USER: root
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE: book
+  

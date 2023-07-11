@@ -1,0 +1,27 @@
+syntax = "proto3";
+package protocols;
+option go_package = "/protocols";
+
+
+message Name {
+    string name = 1;
+}
+
+message Author {
+    string author = 1;
+}
+
+message NameResponse {
+    repeated Name names = 1;
+}
+
+
+service BookServices {
+    rpc getByAuthor(Author) returns (NameResponse) {}
+    rpc getByName(Name) returns (Author) {}
+}
+
+
+
+
+
